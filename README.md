@@ -1,2 +1,8 @@
-# rio203
-rio203 project
+```
+npm install
+npm run dev
+```
+
+```
+open http://localhost:3000
+```
