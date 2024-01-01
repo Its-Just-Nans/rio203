@@ -1,7 +1,8 @@
 {
     "scripts": {
         "dev": "tsx watch src/index.ts",
-        "deploy": "ssh root@137.194.13.140 /opt/rio203/deploy",
+        "deploy": "ssh root@137.194.13.140 cd /opt/rio203/ && ./deploy.sh",
+        "build": "echo todo",
         "start": "npx tsx src/index.ts"
     },
     "dependencies": {
