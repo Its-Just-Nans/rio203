@@ -1,3 +1,3 @@
 #!/bin/bash
 
-git pull && npm install && npm run build && npm run start
+git pull && npm install && npm run build && systemctl restart server.service
