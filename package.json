@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "concurrently 'vite' 'tsx watch server/index.ts' || (npm install && npm run dev)",
-        "build": "vite build",
+        "build": "vite build || (npm install && npm run build)",
         "deploy": "ssh root@137.194.13.140 'cd /opt/rio203/ && ./deploy.sh'",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "start": "/root/.nvm/versions/node/v21.5.0/bin/npx tsx server/index.ts"
