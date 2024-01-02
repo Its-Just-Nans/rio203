@@ -6,9 +6,9 @@
     "scripts": {
         "dev": "concurrently 'vite' 'tsx watch server/index.ts' || (npm install && npm run dev)",
         "build": "vite build",
-        "preview": "vite preview",
+        "deploy": "ssh root@137.194.13.140 'cd /opt/rio203/ && ./deploy.sh'",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "start": "/root/.nvm/versions/node/v21.5.0/bin/npx tsx src/index.ts"
+        "start": "/root/.nvm/versions/node/v21.5.0/bin/npx tsx server/index.ts"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^3.0.1",
