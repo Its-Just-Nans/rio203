@@ -8,11 +8,13 @@
         "build": "vite build || (npm install && npm run build)",
         "deploy": "ssh root@137.194.13.140 'cd /opt/rio203/ && ./deploy.sh'",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "start": "/root/.nvm/versions/node/v21.5.0/bin/npx tsx server/index.ts"
+        "start": "/root/.nvm/versions/node/v21.5.0/bin/npx tsx server/index.ts",
+        "generate": "drizzle-kit generate:sqlite"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^3.0.1",
         "@tsconfig/svelte": "^5.0.2",
+        "drizzle-kit": "^0.20.9",
         "svelte": "^4.2.8",
         "svelte-check": "^3.6.2",
         "tslib": "^2.6.2",
@@ -22,7 +24,11 @@
     },
     "dependencies": {
         "@hono/node-server": "^1.3.5",
+        "@types/better-sqlite3": "^7.6.8",
+        "better-sqlite3": "^9.2.2",
         "concurrently": "^8.2.2",
+        "dotenv": "^16.3.1",
+        "drizzle-orm": "^0.29.3",
         "hono": "^3.11.11"
     }
 }

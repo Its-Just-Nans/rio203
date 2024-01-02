@@ -1,9 +1,12 @@
 <script lang="ts">
-    const doFetch = (url, method) => {
+    const doFetch = (url: string, method: string) => {
         fetch(url, { method: method })
             .then((response) => response.json())
             .then((data) => {
-                document.getElementById("res").innerText = JSON.stringify(data, null, 2);
+                const e = document.getElementById("res");
+                if (e) {
+                    e.innerText = JSON.stringify(data, null, 2);
+                }
             });
     };
     const code = `fetch('/api/setOn', { method: 'POST' })
