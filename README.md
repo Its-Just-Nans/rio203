@@ -13,6 +13,10 @@ npm run dev
 npm run deploy
 # you need a server.service on the production server
 # this will connect to the server, build pages and restart the service
+
+# can be useful to debug
+# journalctl --unit=server.service -f
+# systemctl restart server.service
 ```
 
 ## Notes on the project
