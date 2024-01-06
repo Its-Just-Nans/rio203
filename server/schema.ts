@@ -19,12 +19,8 @@ export const places = sqliteTable("place", {
 export const clients = sqliteTable("client", {
     idClient: integer("idClient").primaryKey({ autoIncrement: true }),
     name: text("name").notNull(),
+    password: text("password").notNull(), //TODO not protected for now
     plaque: text("content").notNull(),
     payment: text("payment").notNull(),
-});
-
-export const admins = sqliteTable("admin", {
-    idAdmin: integer("idAdmin").primaryKey({ autoIncrement: true }),
-    name: text("name").notNull(),
-    pass: text("pass").notNull(),
+    isAdmin: integer("isAdmin").notNull(),
 });

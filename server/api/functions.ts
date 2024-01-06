@@ -1,8 +1,8 @@
 import type { Context } from "hono";
 import { sql } from "drizzle-orm";
 
-import { db } from "./db";
-import { places } from "./schema";
+import { db } from "../db";
+import { places } from "../schema";
 
 let isOn = false;
 
@@ -24,7 +24,7 @@ export const getPlaces = async (c: Context) => {
 export const getPlaceById = async (c: Context) => {
     const id = parseInt(c.req.param("id"));
     if (isNaN(id)) {
-        return c.json({ error: "Invalid ID" });
+        return c.json({ error: "Invalid ID" }, 400);
     }
     console.log(id);
     const item = await db.query.places.findFirst({ where: sql`${places.idPlace} = ${id}` });

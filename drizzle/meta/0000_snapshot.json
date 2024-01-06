@@ -1,39 +1,9 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "c8c900fd-6834-46a9-abda-451e27192f50",
+  "id": "d11824f4-df2e-4893-ab64-070d065fad91",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "admin": {
-      "name": "admin",
-      "columns": {
-        "idAdmin": {
-          "name": "idAdmin",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "pass": {
-          "name": "pass",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "client": {
       "name": "client",
       "columns": {
@@ -51,6 +21,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "content": {
           "name": "content",
           "type": "text",
@@ -61,6 +38,13 @@
         "payment": {
           "name": "payment",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "isAdmin": {
+          "name": "isAdmin",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false

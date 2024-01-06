@@ -1,4 +1,8 @@
 <script lang="ts">
+    import Login from "./lib/Login/Login.svelte";
+    import Account from "./lib/Account/Account.svelte";
+    import Admin from "./lib/Admin/Admin.svelte";
+    import { user } from "./lib/stores";
     const doFetch = (url: string, method: string) => {
         fetch(url, { method: method })
             .then((response) => response.json())
@@ -21,21 +25,31 @@
     <a href="https://github.com/Its-Just-Nans/rio203">https://github.com/Its-Just-Nans/rio203</a>
 </h1>
 
-<a href="/api">GET /api</a>
-<br />
-<a href="/api/isOn">GET /api/isOn</a>
-<br />
-<a href="/api/setOn">POST /api/setOn</a>
-<br />
-<a href="/api/setOff">POST /api/isOff</a>
+<details>
+    <a href="/api">GET /api</a>
+    <br />
+    <a href="/api/isOn">GET /api/isOn</a>
+    <br />
+    <a href="/api/setOn">POST /api/setOn</a>
+    <br />
+    <a href="/api/setOff">POST /api/isOff</a>
 
-<pre id="log" style="width: 100%; font-family: monospace">
-      {code}
-</pre>
-<hr />
-Result:
-<pre id="res"></pre>
-
-<button on:click={() => doFetch("/api/setOn", "POST")}> Eval Code setOn </button>
-<button on:click={() => doFetch("/api/setOff", "POST")}> Eval Code setOn </button>
-<button on:click={() => doFetch("/api/isOn", "GET")}> Eval Code setOn </button>
+    <pre id="log" style="width: 100%; font-family: monospace">
+        {code}
+    </pre>
+    <hr />
+    Result:
+    <pre id="res"></pre>
+    <button on:click={() => doFetch("/api/setOn", "POST")}> Eval Code setOn </button>
+    <button on:click={() => doFetch("/api/setOff", "POST")}> Eval Code setOn </button>
+    <button on:click={() => doFetch("/api/isOn", "GET")}> Eval Code setOn </button>
+</details>
+{#if $user}
+    {#if $user.isAdmin}
+        <Admin />
+    {:else}
+        <Account />
+    {/if}
+{:else}
+    <Login />
+{/if}

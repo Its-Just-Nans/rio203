@@ -1,14 +1,10 @@
-CREATE TABLE `admin` (
-	`idAdmin` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`name` text NOT NULL,
-	`pass` text NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE `client` (
 	`idClient` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text NOT NULL,
+	`password` text NOT NULL,
 	`content` text NOT NULL,
-	`payment` text NOT NULL
+	`payment` text NOT NULL,
+	`isAdmin` integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `parking` (
