@@ -1,5 +1,7 @@
 # rio203
 
+A student project to manage a parking using IoT devices.
+
 ## Development
 
 ```sh
@@ -22,4 +24,4 @@ npm run deploy
 ## Notes on the project
 
 - password is stored in clear text
-- token used for auth are not sage, signed JWT would be better
+- token used for auth are not safe, signed JWT should be used

@@ -1,18 +1,15 @@
+import type { Server } from "http";
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
 import Api from "./api/api";
+import WebSocket from "./websocket/websocket";
 import { port } from "./env";
-import { WebSocketServer } from "ws";
 
 const app = new Hono();
 app.use("/*", serveStatic({ root: "./dist" }));
 
 Api(app);
-
-app.notFound((c) => {
-    return c.text("Custom 404 Message", 404);
-});
 
 const server = serve(
     {
@@ -24,14 +21,4 @@ const server = serve(
     }
 );
 
-const wss = new WebSocketServer({ server });
-
-wss.on("connection", function connection(ws) {
-    ws.on("error", console.error);
-
-    ws.on("message", function message(data) {
-        console.log("received: %s", data);
-    });
-
-    ws.send("something");
-});
+WebSocket(server as Server);

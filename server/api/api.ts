@@ -18,4 +18,7 @@ export default (app: Hono) => {
         return c.json({ error: "Custom 404 Message" }, 404);
     });
     app.route("/api", api);
+    app.notFound((c) => {
+        return c.text("Custom 404 Message", 404);
+    });
 };
