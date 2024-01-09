@@ -40,9 +40,9 @@
     <hr />
     Result:
     <pre id="res"></pre>
-    <button on:click={() => doFetch("/api/setOn", "POST")}> Eval Code setOn </button>
-    <button on:click={() => doFetch("/api/setOff", "POST")}> Eval Code setOn </button>
-    <button on:click={() => doFetch("/api/isOn", "GET")}> Eval Code setOn </button>
+    <button on:click={() => doFetch("/api/setOn", "POST")}> POST /api/setOn </button>
+    <button on:click={() => doFetch("/api/setOff", "POST")}> POST /api/setOff </button>
+    <button on:click={() => doFetch("/api/isOn", "GET")}> POST /api/isOn </button>
 </details>
 {#if $user}
     {#if $user.isAdmin}
