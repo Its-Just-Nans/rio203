@@ -43,6 +43,16 @@
     <button on:click={() => doFetch("/api/setOn", "POST")}> POST /api/setOn </button>
     <button on:click={() => doFetch("/api/setOff", "POST")}> POST /api/setOff </button>
     <button on:click={() => doFetch("/api/isOn", "GET")}> POST /api/isOn </button>
+    <button
+        on:click={() => {
+            setInterval(() => {
+                console.log("fetching");
+                doFetch("/api/isOn", "GET");
+            }, 500);
+        }}
+    >
+        Fetch isOn interval 0.5 sec</button
+    >
 </details>
 {#if $user}
     {#if $user.isAdmin}
