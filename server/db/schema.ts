@@ -11,6 +11,7 @@ export const places = sqliteTable("place", {
     idPlace: integer("idPlace").primaryKey({ autoIncrement: true }),
     name: text("name").notNull(),
     time: integer("time", { mode: "timestamp" }).notNull(),
+    state: text("state").notNull(),
     plaque: text("plaque").notNull(),
     ip: text("ip").notNull(),
     idParking: integer("idParking").notNull(),

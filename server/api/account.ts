@@ -1,8 +1,8 @@
 import type { Context, Next } from "hono";
 import { eq, and, or } from "drizzle-orm";
 
-import { db } from "../db";
-import { clients } from "../schema";
+import { db } from "../db/db";
+import { clients } from "../db/schema";
 import { generateToken } from "../../src/lib/utils";
 
 export const tokens: { [s: string]: string } = {};
