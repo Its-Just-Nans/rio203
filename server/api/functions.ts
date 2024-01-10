@@ -1,19 +1,24 @@
 import type { Context } from "hono";
 import { sql } from "drizzle-orm";
 
-import { db } from "../db";
-import { places } from "../schema";
+import { db } from "../db/db";
+import { places } from "../db/schema";
 
 let isOn = false;
 
-export const isOnFn = (c: Context) => c.json({ isOn: isOn });
+export const isOnFn = (c: Context) => {
+    console.log("isOn", isOn);
+    return c.json({ isOn: isOn });
+};
 
 export const setOn = (c: Context) => {
     isOn = true;
+    console.log("isOn", isOn);
     return c.json({ isOn: isOn });
 };
 export const setOff = (c: Context) => {
     isOn = false;
+    console.log("isOn", isOn);
     return c.json({ isOn: isOn });
 };
 
