@@ -16,9 +16,3 @@ let token = "";
 export const setToken = (newToken: string) => {
     token = newToken;
 };
-
-//TODO: this is not a secure way to generate tokens
-export const generateToken = () => {
-    const r = () => Math.random().toString(36).substring(2);
-    return r() + r() + r() + r() + r() + r() + r() + r();
-};

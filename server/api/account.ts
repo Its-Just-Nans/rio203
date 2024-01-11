@@ -3,7 +3,7 @@ import { eq, and, or } from "drizzle-orm";
 
 import { db } from "../db/db";
 import { clients } from "../db/schema";
-import { generateToken } from "../../src/lib/utils";
+import { generateToken } from "../constants";
 
 export const tokens: { [s: string]: string } = {};
 
