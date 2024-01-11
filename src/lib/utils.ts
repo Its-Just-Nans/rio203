@@ -1,6 +1,6 @@
-export const myFetch = (url: string, method = "GET", body = {}) => {
+export const myFetch = (url: string, method = "GET", body?: object) => {
     return fetch("/api" + url, {
-        body: JSON.stringify(body),
+        body: JSON.stringify(body) ?? undefined,
         method,
         headers: {
             "Content-Type": "application/json",

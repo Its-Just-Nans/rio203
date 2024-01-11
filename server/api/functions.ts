@@ -23,7 +23,8 @@ export const setOff = (c: Context) => {
 };
 
 export const getPlaces = async (c: Context) => {
-    return c.json(await db.query.places.findMany());
+    const places = await db.query.places.findMany();
+    return c.json(places);
 };
 
 export const getPlaceById = async (c: Context) => {

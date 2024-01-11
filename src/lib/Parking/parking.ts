@@ -1,3 +1,7 @@
+import { places } from "../stores";
+import { get } from "svelte/store";
+import type { Place } from "../types";
+
 type variablesType = {
     ctx: CanvasRenderingContext2D;
     canvas: HTMLCanvasElement;
@@ -5,7 +9,6 @@ type variablesType = {
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
-export let places: any[] = [];
 let clicked = false;
 const gridSize = 15;
 
@@ -14,7 +17,7 @@ export const setVar = (t: variablesType) => {
     ctx = t.ctx;
 };
 
-const draw = (place) => {
+const draw = (place: Place) => {
     const { a1, a2, a3, a4, type, selected } = place;
     if (selected) {
         ctx.fillStyle = "red";
@@ -43,7 +46,8 @@ const isPointInsideTriangle = (x, y, x1, y1, x2, y2, x3, y3) => {
 };
 
 const clickOnPlace = (x, y, name = "click") => {
-    const correctPlaceIndex = places.findIndex((onePlace) => {
+    const pla = get(places);
+    const correctPlaceIndex = pla.findIndex((onePlace) => {
         const { a1, a2, a3, a4 } = onePlace;
         if (x >= a1[0] && x <= a3[0] && y >= a1[1] && y <= a3[1]) {
             const c1 = [a1[0] + (a4[0] - a1[0]), a1[1]];
@@ -59,11 +63,14 @@ const clickOnPlace = (x, y, name = "click") => {
         }
     });
     if (correctPlaceIndex > -1) {
-        if (name === "click") {
-            places[correctPlaceIndex].selected = !places[correctPlaceIndex].selected;
-        } else if (name === "move") {
-            places[correctPlaceIndex].selected = true;
-        }
+        places.update((currVal) => {
+            if (name === "click") {
+                currVal[correctPlaceIndex].selected = !currVal[correctPlaceIndex].selected;
+            } else if (name === "move") {
+                currVal[correctPlaceIndex].selected = true;
+            }
+            return [...currVal];
+        });
         drawParking();
     }
 };
@@ -85,7 +92,7 @@ const handleMove = (event: any) => {
 };
 
 export const drawParking = () => {
-    for (const onePlace of places) {
+    for (const onePlace of get(places)) {
         draw(onePlace);
     }
 };
@@ -103,24 +110,29 @@ export const setUpEvent = (newEditMode: boolean) => {
         canvas.addEventListener("mousedown", setClick);
         canvas.addEventListener("mouseup", setNotClick);
     } else {
-        places.forEach((onePlace) => {
-            onePlace.selected = false;
+        places.update((val) => {
+            const newPlaces = val.map((onePlace) => {
+                onePlace.selected = false;
+                return onePlace;
+            });
+            return [...newPlaces];
         });
         canvas.removeEventListener("click", handleClick);
         canvas.removeEventListener("mousemove", handleMove);
         canvas.removeEventListener("mousedown", setClick);
         canvas.removeEventListener("mouseup", setNotClick);
-        drawParking();
     }
+    drawParking();
 };
 
 export const generateParking = () => {
     let total = 0;
+    let placesTotal = [];
     for (let y = 0; y < 10; y++) {
         for (let x = 0; x < 10; x++) {
             const a = x * gridSize * 5 + total;
             const b = y * gridSize * 2;
-            places.push({
+            placesTotal.push({
                 selected: false,
                 a1: [a, b],
                 a2: [a + gridSize * 5, b],
@@ -131,4 +143,5 @@ export const generateParking = () => {
         }
         total += gridSize * 2;
     }
+    return placesTotal;
 };

@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 export default {
-    schema: "./server/schema.ts",
+    schema: "./server/db/schema.ts",
     out: "./drizzle",
     driver: "better-sqlite",
     dbCredentials: {
