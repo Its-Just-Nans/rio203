@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { parseJSON, JtoS } from "../../../server/constants";
     export let id = "";
-    const socket = new WebSocket("ws://localhost:8080/api");
+    const socket = new WebSocket(`ws://${window.location.host}/api`);
     let dataToDisplay = "";
     const addToDisplay = (data: any, isSend = false) => {
         const d = JtoS(data);

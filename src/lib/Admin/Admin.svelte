@@ -7,7 +7,7 @@
     import { user, places } from "../stores";
     import { myFetch } from "../utils";
     onMount(() => {
-        const socket = new WebSocket("ws://localhost:8080/api");
+        const socket = new WebSocket(`ws://${window.location.host}/api`);
         socket.addEventListener("message", function (event) {
             const data = parseJSON(event.data);
             if (data.request === "name") {
