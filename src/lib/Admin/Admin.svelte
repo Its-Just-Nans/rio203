@@ -5,9 +5,9 @@
     import Placable from "../Placable/Placable.svelte";
     import SoftCaptor from "../SoftCaptor/SoftCaptor.svelte";
     import { user, places } from "../stores";
-    import { myFetch } from "../utils";
+    import { myFetch, webSocketURL } from "../utils";
     onMount(() => {
-        const socket = new WebSocket(`ws://${window.location.host}/api`);
+        const socket = new WebSocket(webSocketURL);
         socket.addEventListener("message", function (event) {
             const data = parseJSON(event.data);
             if (data.request === "name") {

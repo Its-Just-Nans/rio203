@@ -1,8 +1,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { parseJSON, JtoS } from "../../../server/constants";
+    import { webSocketURL } from "../utils";
     export let id = "";
-    const socket = new WebSocket(`ws://${window.location.host}/api`);
+    const socket = new WebSocket(webSocketURL);
     let dataToDisplay = "";
     const addToDisplay = (data: any, isSend = false) => {
         const d = JtoS(data);
