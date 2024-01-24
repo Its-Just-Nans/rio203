@@ -46,7 +46,7 @@ export const carDetected = async (c: Context) => {
             .update(clients)
             .set({ balance: balance - toPay })
             .where(eq(clients.plaque, plaque));
-        return c.json({ paid: toPay, needToPay: 0 });
+        return c.json({ paid: toPay, needToPay: 0, balance: balance - toPay });
     }
     // direction === "in"
     const clientList = await db.select().from(clients).where(eq(clients.plaque, plaque));
