@@ -1,14 +1,12 @@
 <script>
+    import { logout } from "../Login/login";
     import { user } from "../stores";
-    import { myFetch } from "../utils";
 </script>
 
 {#if $user}
     <button
         on:click={() => {
-            myFetch("/logout", "POST").then(() => {
-                $user = null;
-            });
+            logout();
         }}>Logout</button
     >
 

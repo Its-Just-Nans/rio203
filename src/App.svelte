@@ -3,6 +3,7 @@
     import Account from "./lib/Account/Account.svelte";
     import Admin from "./lib/Admin/Admin.svelte";
     import { user } from "./lib/stores";
+    import { onMount } from "svelte";
     const doFetch = (url: string, method: string) => {
         fetch(url, { method: method })
             .then((response) => response.json())

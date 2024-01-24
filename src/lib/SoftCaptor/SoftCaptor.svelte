@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { parseJSON, JtoS } from "../../../server/constants";
+    import { parseJSON, JtoS } from "../../../shared/constants";
     import { webSocketURL } from "../utils";
     export let id = "";
     const socket = new WebSocket(webSocketURL);

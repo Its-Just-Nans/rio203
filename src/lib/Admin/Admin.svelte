@@ -1,11 +1,14 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { parseJSON, JtoS } from "../../../server/constants";
-    import Parking from "../Parking/Parking.svelte";
+    import { parseJSON, JtoS } from "../../../shared/constants";
+    import Parking from "./Parkings/Parkings.svelte";
     import Placable from "../Placable/Placable.svelte";
     import SoftCaptor from "../SoftCaptor/SoftCaptor.svelte";
-    import { user, places } from "../stores";
+    import { user } from "../stores";
+    import { places } from "./adminStore";
+
     import { myFetch, webSocketURL } from "../utils";
+    import { logout } from "../Login/login";
     onMount(() => {
         const socket = new WebSocket(webSocketURL);
         socket.addEventListener("message", function (event) {
@@ -25,9 +28,7 @@
 
 <button
     on:click={() => {
-        myFetch("/logout", "POST").then(() => {
-            $user = null;
-        });
+        logout();
     }}>Logout</button
 >
 

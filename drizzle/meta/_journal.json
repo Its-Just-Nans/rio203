@@ -15,6 +15,27 @@
       "when": 1704883021798,
       "tag": "0001_tearful_mac_gargan",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1705431752769,
+      "tag": "0002_colossal_baron_zemo",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1705431816529,
+      "tag": "0003_public_ultimo",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1706085941483,
+      "tag": "0004_square_overlord",
+      "breakpoints": true
     }
   ]
 }

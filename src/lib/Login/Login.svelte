@@ -1,10 +1,15 @@
 <script lang="ts">
     import { myFetch, setToken } from "../utils";
     import { user } from "../stores";
+    import { onMount } from "svelte";
+    import { checkLogin, login, register } from "./login";
     let username = "";
     let password = "";
     let plaque = "";
     let isLogin = true;
+    onMount(() => {
+        checkLogin();
+    });
 </script>
 
 <div>
@@ -22,12 +27,7 @@
     {#if isLogin}
         <button
             on:click={() => {
-                myFetch("/login", "POST", { username, password })
-                    .then((data) => {
-                        setToken(data.token);
-                        $user = data.user;
-                    })
-                    .catch(() => {});
+                login(username, password);
             }}
         >
             Login
@@ -35,11 +35,9 @@
     {:else}
         <button
             on:click={() => {
-                myFetch("/register", "POST", { username, password, plaque })
-                    .then((data) => {
-                        isLogin = true;
-                    })
-                    .catch(() => {});
+                register(username, password, plaque).then((data) => {
+                    isLogin = true;
+                });
             }}>Register</button
         >
     {/if}

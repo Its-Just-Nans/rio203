@@ -1,5 +1,17 @@
 import { Hono } from "hono";
-import { isOnFn, setOff, setOn, getPlaces, getPlaceById } from "./functions";
+import {
+    isOnFn,
+    setOff,
+    setOn,
+    getPlaces,
+    getPlaceById,
+    setPlaces,
+    getParkingsOfUser,
+    getParking,
+    getPlacesOfParking,
+    deleteParking,
+} from "./functions";
+import { carDetected } from "./car";
 import { login, logout, register, parseUser } from "./account";
 
 export default (app: Hono) => {
@@ -9,8 +21,14 @@ export default (app: Hono) => {
     api.get("/isOn", isOnFn);
     api.post("/setOn", setOn);
     api.post("/setOff", setOff);
+    api.get("/parkingsOfUser", getParkingsOfUser);
+    api.get("/parking/:id", getParking);
+    api.delete("/parking/:id", deleteParking);
     api.get("/places", getPlaces);
+    api.get("/places/:id", getPlacesOfParking);
+    api.post("/places", setPlaces);
     api.get("/place/:id", getPlaceById);
+    api.post("/carDetected", carDetected);
     api.post("/login", login);
     api.post("/register", register);
     api.post("/logout", logout);

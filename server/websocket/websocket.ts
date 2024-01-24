@@ -3,7 +3,7 @@ import type WebSocket from "ws";
 import type { Server } from "http";
 import { db } from "../db/db";
 import { places } from "../db/schema";
-import { PLACES_STATES, parseJSON, JtoS } from "../constants";
+import { PLACES_STATES, parseJSON, JtoS } from "../../shared/constants";
 import { eq } from "drizzle-orm";
 
 let wss;

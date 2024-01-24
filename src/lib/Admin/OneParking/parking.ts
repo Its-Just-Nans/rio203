@@ -1,6 +1,7 @@
-import { places } from "../stores";
+import { places } from "../adminStore";
 import { get } from "svelte/store";
-import type { Place } from "../types";
+import type { Place } from "../../../../shared/types";
+import { PLACES_STATES } from "../../../../shared/constants";
 
 type variablesType = {
     ctx: CanvasRenderingContext2D;
@@ -127,17 +128,24 @@ export const setUpEvent = (newEditMode: boolean) => {
 
 export const generateParking = () => {
     let total = 0;
-    let placesTotal = [];
+    let placesTotal: Place[] = [];
+    const width = gridSize * 5;
+    const height = gridSize * 3;
     for (let y = 0; y < 10; y++) {
         for (let x = 0; x < 10; x++) {
-            const a = x * gridSize * 5 + total;
-            const b = y * gridSize * 2;
+            const a = x * width;
+            const b = y * height;
             placesTotal.push({
                 selected: false,
+                plaque: "",
+                ip: "",
+                name: `${x}-${y}`,
+                state: PLACES_STATES.FREE,
+                time: 0,
                 a1: [a, b],
-                a2: [a + gridSize * 5, b],
-                a3: [a + gridSize * 7, b + gridSize * 2],
-                a4: [a + gridSize * 2, b + gridSize * 2],
+                a2: [a + width, b],
+                a3: [a + width, b + height],
+                a4: [a, b + height],
                 type: "parking",
             });
         }
