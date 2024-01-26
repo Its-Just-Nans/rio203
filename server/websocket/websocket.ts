@@ -5,6 +5,7 @@ import { db } from "../db/db";
 import { places } from "../db/schema";
 import { PLACES_STATES, parseJSON, JtoS } from "../../shared/constants";
 import { eq } from "drizzle-orm";
+import { getLatestClient } from "../api/carStack";
 
 let wss;
 type WsClients = { [e: string]: WebSocket };
@@ -44,12 +45,16 @@ const onMessage = async (data: RawData, ws: WebSocket) => {
         const newState = isCar ? PLACES_STATES.BUSY : PLACES_STATES.FREE;
         await db.update(places).set({ state: newState }).where(eq(places.idPlace, id));
         sendUpdateToOwners({ update: "car", car: isCar });
+    } else if (request === "info") {
+        // handle change of state
     } else {
         console.log("unknown request", data.toString());
     }
+    sendUpdateToOwners({ request: "info", info: { request, ...rest } });
 };
 
 const sendUpdateToOwners = (msg: object) => {
+    console.log("sending update to owners");
     for (const owner in owners) {
         owners[owner].send(JtoS(msg));
     }

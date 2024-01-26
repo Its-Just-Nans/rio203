@@ -1,3 +1,5 @@
+import { ERRORS } from "../../shared/errors";
+
 const isHttps = window.location.protocol === "https:";
 export const webSocketURL = `${isHttps ? "wss" : "ws"}://${window.location.host}/api`;
 
@@ -17,3 +19,24 @@ export const setToken = (newToken: string) => {
     token = newToken;
 };
 export const getToken = () => token;
+
+type Error = {
+    code: string;
+    error: string;
+};
+
+type MayBeError = Error | {};
+
+export const handleErrors = (res: MayBeError, callback?: () => void) => {
+    for (const oneError of Object.values(ERRORS)) {
+        if ("code" in res && "error" in res) {
+            if (res.code === oneError.code) {
+                return res.error;
+            }
+        }
+    }
+    if (callback) {
+        return callback();
+    }
+    return "";
+};

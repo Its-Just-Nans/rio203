@@ -1,9 +1,11 @@
 import type { Context } from "hono";
-import { eq } from "drizzle-orm";
+import { eq, and, ne } from "drizzle-orm";
 
 import { db } from "../db/db";
 import { clients, places } from "../db/schema";
 import { PLACES_STATES } from "../../shared/constants";
+import { CLIENT_NOT_FOUND, NO_MONEY, NO_PLACE_FOUND, ALREADY_PRESENT } from "../../shared/errors";
+import { addToStack } from "./carStack";
 
 const getToPay = (timeIn: number) => {
     return 10;
@@ -13,15 +15,15 @@ export const carDetected = async (c: Context) => {
     const { direction, plaque } = await c.req.json();
     if (direction === "out") {
         // we check the time of the place
-        const placeList = await db.select().from(places).where(eq(places.plaque, plaque));
+        const placeList = await db
+            .select()
+            .from(places)
+            .where(and(eq(places.plaque, plaque), ne(places.time, 0)));
         if (placeList.length === 0) {
-            return c.json({ error: "no place found" });
+            return c.json(NO_PLACE_FOUND, 404);
         }
         const place = placeList[0];
         const time = place.time;
-        if (time === 0) {
-            return c.json({ error: "No place found (error with time)" });
-        }
         const date = new Date();
         const timeOut = date.getTime();
         const timeIn = timeOut - time;
@@ -34,12 +36,12 @@ export const carDetected = async (c: Context) => {
         // we get the client
         const clientList = await db.select().from(clients).where(eq(clients.plaque, plaque));
         if (clientList.length === 0) {
-            return c.json({ error: "No client found", needToPay: toPay });
+            return c.json({ ...CLIENT_NOT_FOUND, needToPay: toPay });
         }
         const client = clientList[0];
         const balance = client.balance;
         if (balance < toPay) {
-            return c.json({ error: "Not enough money", needToPay: toPay });
+            return c.json({ ...NO_MONEY, needToPay: toPay });
         }
         // we update the client
         await db
@@ -49,6 +51,14 @@ export const carDetected = async (c: Context) => {
         return c.json({ paid: toPay, needToPay: 0, balance: balance - toPay });
     }
     // direction === "in"
-    const clientList = await db.select().from(clients).where(eq(clients.plaque, plaque));
-    // TODO add client to a stack variable
+    const [place] = await db.select().from(places).where(eq(places.plaque, plaque));
+    if (!place) {
+        return c.json(ALREADY_PRESENT, 400);
+    }
+    const [client] = await db.select().from(clients).where(eq(clients.plaque, plaque));
+    if (!client) {
+        return c.json(CLIENT_NOT_FOUND);
+    }
+    addToStack({ plaque, time: new Date().getTime(), idClient: client.idClient });
+    return c.json({ client: client.name });
 };

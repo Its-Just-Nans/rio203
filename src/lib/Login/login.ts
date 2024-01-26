@@ -4,11 +4,12 @@ import { parseJSON } from "../../../shared/constants";
 
 const LOGIN_KEY = "login";
 
-export const login = (username: string, password: string) => {
-    myFetch("/login", "POST", { username, password }).then((data) => {
+export const login = async (username: string, password: string) => {
+    return myFetch("/login", "POST", { username, password }).then((data) => {
         setToken(data.token);
         user.set(data.user);
         localStorage.setItem(LOGIN_KEY, JSON.stringify({ username, password }));
+        return data;
     });
 };
 
@@ -21,11 +22,11 @@ export const checkLogin = () => {
 };
 
 export const register = async (username: string, password: string, plaque: string) => {
-    myFetch("/register", "POST", { username, password, plaque });
+    return myFetch("/register", "POST", { username, password, plaque });
 };
 
 export const logout = () => {
-    myFetch("/logout", "POST").then(() => {
+    return myFetch("/logout", "POST").then(() => {
         user.set(null);
         localStorage.removeItem(LOGIN_KEY);
     });

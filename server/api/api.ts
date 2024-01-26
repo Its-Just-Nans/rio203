@@ -1,8 +1,5 @@
 import { Hono } from "hono";
 import {
-    isOnFn,
-    setOff,
-    setOn,
     getPlaces,
     getPlaceById,
     setPlaces,
@@ -18,9 +15,6 @@ export default (app: Hono) => {
     const api = new Hono();
     api.use("*", parseUser);
     api.get("/", (c) => c.json({ msg: "Hello API" }));
-    api.get("/isOn", isOnFn);
-    api.post("/setOn", setOn);
-    api.post("/setOff", setOff);
     api.get("/parkingsOfUser", getParkingsOfUser);
     api.get("/parking/:id", getParking);
     api.delete("/parking/:id", deleteParking);

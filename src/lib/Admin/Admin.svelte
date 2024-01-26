@@ -3,7 +3,6 @@
     import { parseJSON, JtoS } from "../../../shared/constants";
     import Parking from "./Parkings/Parkings.svelte";
     import Placable from "../Placable/Placable.svelte";
-    import SoftCaptor from "../SoftCaptor/SoftCaptor.svelte";
     import { user } from "../stores";
     import { places } from "./adminStore";
 
@@ -12,9 +11,11 @@
     onMount(() => {
         const socket = new WebSocket(webSocketURL);
         socket.addEventListener("message", function (event) {
-            const data = parseJSON(event.data);
-            if (data.request === "name") {
+            const { request, ...data } = parseJSON(event.data);
+            if (request === "name") {
                 socket.send(JtoS({ request: "name", name: $user.name, isAdmin: true }));
+            } else if (request === "info") {
+                msgs = [...msgs, data.info];
             }
         });
         return () => {
@@ -22,8 +23,7 @@
             socket.close();
         };
     });
-    let isSoftwarePlace = false;
-    let idPlaceSelected = null;
+    let msgs = [];
 </script>
 
 <button
@@ -36,30 +36,25 @@
 <p>Name: {$user.name}</p>
 <p>Plaque: {$user.plaque}</p>
 
-<label for="softPlace">Software place mode</label>
-<input
-    type="checkbox"
-    on:input={(event) => {
-        const { value } = event.target;
-        if (value) {
-            isSoftwarePlace = true;
-            const filtered = $places.filter((oneP) => oneP.isSelected);
-            if (filtered.length > 1) {
-                return alert("only one place plz");
-            }
-            idPlaceSelected = filtered[0].id;
-        } else {
-            isSoftwarePlace = false;
-        }
-    }}
-/>
-
-{#if isSoftwarePlace && idPlaceSelected}
-    <Placable name="parking">
-        <SoftCaptor id={idPlaceSelected} />
-    </Placable>
-{/if}
-
-<br />
+<Placable name="console">
+    <div>
+        <span>Real-time console</span>
+        <div class="logger">
+            {#each msgs as oneMsg}
+                <span class="msg">{JSON.stringify(oneMsg)}</span>
+            {/each}
+        </div>
+    </div></Placable
+>
 
 <Parking />
+
+<style>
+    .logger {
+        height: 200px;
+        overflow-y: scroll;
+    }
+    .msg {
+        display: block;
+    }
+</style>

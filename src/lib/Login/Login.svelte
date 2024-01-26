@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { myFetch, setToken } from "../utils";
+    import { myFetch, setToken, handleErrors } from "../utils";
     import { user } from "../stores";
     import { onMount } from "svelte";
     import { checkLogin, login, register } from "./login";
+    import { USER_NOT_FOUND, USER_EXISTS } from "../../../shared/errors";
     let username = "";
     let password = "";
     let plaque = "";
@@ -10,6 +11,8 @@
     onMount(() => {
         checkLogin();
     });
+    let msg = "";
+    $: typeof isLogin === "boolean" && (msg = "");
 </script>
 
 <div>
@@ -27,7 +30,9 @@
     {#if isLogin}
         <button
             on:click={() => {
-                login(username, password);
+                login(username, password).then((data) => {
+                    msg = handleErrors(data);
+                });
             }}
         >
             Login
@@ -36,7 +41,9 @@
         <button
             on:click={() => {
                 register(username, password, plaque).then((data) => {
-                    isLogin = true;
+                    msg = handleErrors(data, ()=>{
+                        isLogin = true;
+                    });
                 });
             }}>Register</button
         >
@@ -66,9 +73,13 @@
             >
         </div>
     {/if}
+    <p class="error">{msg} </p>
 </div>
 
 <style>
+    .error{
+        color: red;
+    }
     .blue {
         color: blue;
         cursor: pointer;

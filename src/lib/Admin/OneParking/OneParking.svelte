@@ -5,6 +5,8 @@
     import { myFetch } from "../../utils";
     import type { Place } from "../../../../shared/types";
     import { getParkingsOfUser } from "../Parkings/parkings";
+    import Placable from "../../Placable/Placable.svelte";
+    import SoftCaptor from "../../SoftCaptor/SoftCaptor.svelte";
     export let idParking: number | null = null;
 
     let isLoading = true;
@@ -47,6 +49,12 @@
             }
         }
     });
+    let isSoftwarePlace = false;
+    let idPlaceSelected = null;
+    places.subscribe((newPlaces) => {
+        isSoftwarePlace = false;
+        idPlaceSelected = null;
+    });
 </script>
 
 <div class="parking">
@@ -75,6 +83,43 @@
         <canvas id="gridCanvas"></canvas>
     </div>
 </div>
+
+
+{#if $places.filter((oneP) => oneP.selected).length == 1}
+    <button
+        type="checkbox"
+        on:click={(event) => {
+            if(isSoftwarePlace){
+                isSoftwarePlace = false;
+                return
+            }
+            isSoftwarePlace = true;
+            const filtered = $places.filter((oneP) => oneP.selected);
+            if (filtered.length > 1) {
+                isSoftwarePlace = false
+                return alert("only one place plz");
+            }
+            if (filtered.length === 0) {
+                isSoftwarePlace = false
+                return alert("select a place plz");
+            }
+            idPlaceSelected = filtered[0].idPlace;
+        }}
+    >
+    {#if isSoftwarePlace}
+    Close software place mode
+    {:else}
+    Open Software place mode
+    {/if}
+    </button>
+{/if}
+
+{#if isSoftwarePlace && idPlaceSelected}
+    <Placable name="software_place">
+        <SoftCaptor id={idPlaceSelected} />
+    </Placable>
+{/if}
+
 
 <style>
     .canvas-container {
