@@ -10,3 +10,5 @@ export let API_URL = "/api";
 export const getApiUrl = () => API_URL;
 
 export const setApiUrl = (url: string) => (API_URL = url);
+
+export const PREFIX_URL = window.location.hostname.includes("its-just-nans") ? window.location.pathname : "";

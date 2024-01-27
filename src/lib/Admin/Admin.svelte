@@ -3,7 +3,7 @@
     import { parseJSON, JtoS } from "../../../shared/constants";
     import Parking from "./Parkings/Parkings.svelte";
     import Placable from "../Placable/Placable.svelte";
-    import { user } from "../stores";
+    import { user, PREFIX_URL } from "../stores";
     import { places } from "./adminStore";
     import { myFetch, webSocketURL } from "../utils";
     import { logout } from "../Login/login";
@@ -30,7 +30,7 @@
     <button
         on:click={() => {
             logout().then(() => {
-                navigate("/", { replace: true });
+                navigate(PREFIX_URL + "/", { replace: true });
             });
         }}>Logout</button
     >

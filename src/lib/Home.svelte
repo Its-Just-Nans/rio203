@@ -2,7 +2,7 @@
     import Login from "./Login/Login.svelte";
     import Account from "./Account/Account.svelte";
     import Admin from "./Admin/Admin.svelte";
-    import { user, getApiUrl, setApiUrl } from "./stores";
+    import { user, getApiUrl, setApiUrl, PREFIX_URL } from "./stores";
     import { onMount } from "svelte";
     import { myFetch } from "./utils";
     import { navigate } from "svelte-routing";
@@ -26,9 +26,9 @@
     user.subscribe((value) => {
         if (value) {
             if (value.isAdmin) {
-                navigate("/admin", { replace: true });
+                navigate(PREFIX_URL + "/admin", { replace: true });
             } else {
-                navigate("/account", { replace: true });
+                navigate(PREFIX_URL + "/account", { replace: true });
             }
         }
     });
