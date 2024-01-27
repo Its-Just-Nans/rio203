@@ -42,7 +42,6 @@
         </Route>
         <Route path={"/about"} component={About} />
         <Route path={"/"}><Home /></Route>
-        {PREFIX_URL}
     </div>
 </Router>
 
