@@ -4,7 +4,7 @@
     import Admin from "./lib/Admin/Admin.svelte";
     import Home from "./lib/Home.svelte";
     import About from "./lib/About.svelte";
-    import { Router, Link, Route } from "svelte-routing";
+    import { Router, Link, Route, links } from "svelte-routing";
     import { onMount } from "svelte";
     import { myFetch } from "./lib/utils";
     import { user, APP_NAME } from "./lib/stores";
@@ -25,7 +25,7 @@
     });
 </script>
 
-<Router>
+<Router basepath={window.location.hostname.includes("its-just-nans") ? "/rio203" : ""}>
     <div class="header">
         <h1>Welcome to {APP_NAME}</h1>
     </div>
