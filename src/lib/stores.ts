@@ -11,4 +11,8 @@ export const getApiUrl = () => API_URL;
 
 export const setApiUrl = (url: string) => (API_URL = url);
 
-export const PREFIX_URL = window.location.pathname !== "/" ? window.location.pathname : "";
+export const PREFIX_URL = window.location.pathname.includes("dist")
+    ? "/dist/"
+    : window.location.pathname.includes("rio203")
+    ? "/rio203/"
+    : "/";

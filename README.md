@@ -25,3 +25,4 @@ npm run deploy
 
 - password is stored in clear text
 - token used for auth are not safe, signed JWT should be used
+- API is Cross Origin: "*" (not safe)

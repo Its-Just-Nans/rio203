@@ -30,7 +30,7 @@
     <button
         on:click={() => {
             logout().then(() => {
-                navigate(PREFIX_URL + "/", { replace: true });
+                navigate(PREFIX_URL + "", { replace: true });
             });
         }}>Logout</button
     >

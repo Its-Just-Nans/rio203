@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import {
     getPlaces,
     getPlaceById,
@@ -13,7 +14,13 @@ import { login, logout, register, parseUser } from "./account";
 
 export default (app: Hono) => {
     const api = new Hono();
-    api.use("*", parseUser);
+    api.use(
+        "*",
+        cors({
+            origin: "*", // Allow from everywhere for now
+        }),
+        parseUser
+    );
     api.get("/", (c) => c.json({ msg: "Hello API" }));
     api.get("/parkingsOfUser", getParkingsOfUser);
     api.get("/parking/:id", getParking);

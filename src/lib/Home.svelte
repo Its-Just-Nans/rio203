@@ -26,9 +26,9 @@
     user.subscribe((value) => {
         if (value) {
             if (value.isAdmin) {
-                navigate(PREFIX_URL + "/admin", { replace: true });
+                navigate(PREFIX_URL + "admin", { replace: true });
             } else {
-                navigate(PREFIX_URL + "/account", { replace: true });
+                navigate(PREFIX_URL + "account", { replace: true });
             }
         }
     });

@@ -30,18 +30,19 @@
         <h1>Welcome to {APP_NAME}</h1>
     </div>
     <div>
-        <Route path="/account" component={Account} />
-        <Route path="/admin">
+        <Route path={"/account"} component={Account} />
+        <Route path={"/admin"}>
             {#if $user}
                 {#if $user.isAdmin}
                     <Admin />
                 {:else}
-                    <Redirect to="/" />
+                    <Redirect to="" />
                 {/if}
             {/if}
         </Route>
-        <Route path="/about" component={About} />
-        <Route path="/"><Home /></Route>
+        <Route path={"/about"} component={About} />
+        <Route path={"/"}><Home /></Route>
+        {PREFIX_URL}
     </div>
 </Router>
 
