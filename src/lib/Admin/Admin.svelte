@@ -5,9 +5,9 @@
     import Placable from "../Placable/Placable.svelte";
     import { user } from "../stores";
     import { places } from "./adminStore";
-
     import { myFetch, webSocketURL } from "../utils";
     import { logout } from "../Login/login";
+    import { navigate } from "svelte-routing";
     onMount(() => {
         const socket = new WebSocket(webSocketURL);
         socket.addEventListener("message", function (event) {
@@ -26,28 +26,32 @@
     let msgs = [];
 </script>
 
-<button
-    on:click={() => {
-        logout();
-    }}>Logout</button
->
+{#if $user}
+    <button
+        on:click={() => {
+            logout().then(() => {
+                navigate("/", { replace: true });
+            });
+        }}>Logout</button
+    >
 
-<h2>You are admin !</h2>
-<p>Name: {$user.name}</p>
-<p>Plaque: {$user.plaque}</p>
+    <h2>You are admin !</h2>
+    <p>Name: {$user.name}</p>
+    <p>Plaque: {$user.plaque}</p>
 
-<Placable name="console">
-    <div>
-        <span>Real-time console</span>
-        <div class="logger">
-            {#each msgs as oneMsg}
-                <span class="msg">{JSON.stringify(oneMsg)}</span>
-            {/each}
-        </div>
-    </div></Placable
->
+    <Placable name="console">
+        <div>
+            <span>Real-time console</span>
+            <div class="logger">
+                {#each msgs as oneMsg}
+                    <span class="msg">{JSON.stringify(oneMsg)}</span>
+                {/each}
+            </div>
+        </div></Placable
+    >
 
-<Parking />
+    <Parking />
+{/if}
 
 <style>
     .logger {

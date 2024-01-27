@@ -1,4 +1,5 @@
 import App from "./App.svelte";
+import "./style.css";
 
 const appElement = document.getElementById("app");
 

@@ -27,7 +27,7 @@ export const register = async (username: string, password: string, plaque: strin
 
 export const logout = () => {
     return myFetch("/logout", "POST").then(() => {
-        user.set(null);
         localStorage.removeItem(LOGIN_KEY);
+        user.set(null);
     });
 };

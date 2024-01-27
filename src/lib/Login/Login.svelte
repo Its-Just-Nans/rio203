@@ -8,14 +8,11 @@
     let password = "";
     let plaque = "";
     let isLogin = true;
-    onMount(() => {
-        checkLogin();
-    });
     let msg = "";
     $: typeof isLogin === "boolean" && (msg = "");
 </script>
 
-<div>
+<div class="login-container">
     <form>
         <input type="text" bind:value={username} placeholder="Email" autocomplete="email" />
         <br />
@@ -41,7 +38,7 @@
         <button
             on:click={() => {
                 register(username, password, plaque).then((data) => {
-                    msg = handleErrors(data, ()=>{
+                    msg = handleErrors(data, () => {
                         isLogin = true;
                     });
                 });
@@ -73,15 +70,43 @@
             >
         </div>
     {/if}
-    <p class="error">{msg} </p>
+    <p class="error">{msg}</p>
 </div>
 
 <style>
-    .error{
+    .error {
         color: red;
     }
     .blue {
         color: blue;
+        cursor: pointer;
+    }
+    .login-container {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 300px;
+        text-align: center;
+    }
+
+    .login-container h2 {
+        margin-bottom: 20px;
+    }
+
+    .login-container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+    }
+
+    .login-container button {
+        background-color: #4caf50;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
         cursor: pointer;
     }
 </style>
