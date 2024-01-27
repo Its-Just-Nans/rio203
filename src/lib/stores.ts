@@ -5,4 +5,8 @@ export const settings = writable({ allowMove: true });
 
 export const APP_NAME = "🇦 🇷 🇰 🇮 🇳 🇬";
 
-export const API_URL = "/api"
+export let API_URL = "/api";
+
+export const getApiUrl = () => API_URL;
+
+export const setApiUrl = (url: string) => (API_URL = url);

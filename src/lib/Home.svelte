@@ -2,14 +2,14 @@
     import Login from "./Login/Login.svelte";
     import Account from "./Account/Account.svelte";
     import Admin from "./Admin/Admin.svelte";
-    import { user } from "./stores";
+    import { user, getApiUrl, setApiUrl } from "./stores";
     import { onMount } from "svelte";
     import { myFetch } from "./utils";
     import { navigate } from "svelte-routing";
     import { Router, Link, Route } from "svelte-routing";
 
     let isOnline: null | boolean = null;
-    onMount(() => {
+    const checkOnline = () => {
         myFetch("")
             .then((data) => {
                 if (data) {
@@ -19,6 +19,9 @@
             .catch(() => {
                 isOnline = false;
             });
+    };
+    onMount(() => {
+        checkOnline();
     });
     user.subscribe((value) => {
         if (value) {
@@ -41,14 +44,26 @@
         <br />
         <div class="status">
             <p>
-                <span> API status: </span>
-                {#if isOnline === true}
-                    <span class="online"> Online </span>
-                {:else if isOnline === false}
-                    <span class="offline"> Offline </span>
-                {:else}
-                    <span> Loading... </span>
-                {/if}
+                <details>
+                    <summary>
+                        <span> API status: </span>
+                        {#if isOnline === true}
+                            <span class="online"> Online </span>
+                        {:else if isOnline === false}
+                            <span class="offline"> Offline </span>
+                        {:else}
+                            <span> Loading... </span>
+                        {/if}
+                    </summary>
+                    <input
+                        type="text"
+                        on:input={(event) => {
+                            setApiUrl(event.target.value);
+                            checkOnline();
+                        }}
+                        value={getApiUrl()}
+                    />
+                </details>
             </p>
         </div>
         A project made for RIO203 - <Link to="/about">Learn more</Link>
