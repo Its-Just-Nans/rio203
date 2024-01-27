@@ -4,3 +4,5 @@ export const user = writable(null);
 export const settings = writable({ allowMove: true });
 
 export const APP_NAME = "🇦 🇷 🇰 🇮 🇳 🇬";
+
+export const API_URL = "/api"

@@ -1,10 +1,11 @@
 import { ERRORS } from "../../shared/errors";
+import { API_URL } from "./stores";
 
 const isHttps = window.location.protocol === "https:";
 export const webSocketURL = `${isHttps ? "wss" : "ws"}://${window.location.host}/api`;
 
 export const myFetch = (url: string, method = "GET", body?: object) => {
-    return fetch("/api" + url, {
+    return fetch(API_URL + url, {
         body: JSON.stringify(body) ?? undefined,
         method,
         headers: {
