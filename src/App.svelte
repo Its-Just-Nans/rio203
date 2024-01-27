@@ -30,8 +30,8 @@
         <h1>Welcome to {APP_NAME}</h1>
     </div>
     <div>
-        <Route path="./account" component={Account} />
-        <Route path="./admin">
+        <Route path="/account" component={Account} />
+        <Route path="/admin">
             {#if $user}
                 {#if $user.isAdmin}
                     <Admin />
@@ -40,8 +40,8 @@
                 {/if}
             {/if}
         </Route>
-        <Route path="./about" component={About} />
-        <Route path="./"><Home /></Route>
+        <Route path="/about" component={About} />
+        <Route path="/"><Home /></Route>
     </div>
 </Router>
 
