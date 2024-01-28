@@ -1,11 +1,11 @@
 export type Place = {
     idPlace?: number;
+    idParking?: number;
     selected: boolean;
     a1: number[];
     a2: number[];
     a3: number[];
     a4: number[];
-    type: string;
     plaque: string;
     name: string;
     state: string;

@@ -6,13 +6,14 @@ import { clients, places } from "../db/schema";
 import { PLACES_STATES } from "../../shared/constants";
 import { CLIENT_NOT_FOUND, NO_MONEY, NO_PLACE_FOUND, ALREADY_PRESENT } from "../../shared/errors";
 import { addToStack } from "./carStack";
+import { sendUpdateToOwners } from "../websocket/owners";
 
 const getToPay = (timeIn: number) => {
     return 10;
 };
 
 export const carDetected = async (c: Context) => {
-    const { direction, plaque } = await c.req.json();
+    const { direction, plaque, parkingid: parkingId } = await c.req.json();
     if (direction === "out") {
         // we check the time of the place
         const placeList = await db
@@ -33,6 +34,7 @@ export const carDetected = async (c: Context) => {
             .update(places)
             .set({ state: PLACES_STATES.FREE, plaque: "", time: 0 })
             .where(eq(places.plaque, plaque));
+        sendUpdateToOwners({ request: "reload", name: "parking", idPlace: place.idPlace });
         // we get the client
         const clientList = await db.select().from(clients).where(eq(clients.plaque, plaque));
         if (clientList.length === 0) {
@@ -52,13 +54,14 @@ export const carDetected = async (c: Context) => {
     }
     // direction === "in"
     const [place] = await db.select().from(places).where(eq(places.plaque, plaque));
-    if (!place) {
+    if (place) {
         return c.json(ALREADY_PRESENT, 400);
     }
+    addToStack(parkingId.toString(), { plaque, time: new Date().getTime() });
+    sendUpdateToOwners({ request: "reload", name: "cars" });
     const [client] = await db.select().from(clients).where(eq(clients.plaque, plaque));
     if (!client) {
         return c.json(CLIENT_NOT_FOUND);
     }
-    addToStack({ plaque, time: new Date().getTime(), idClient: client.idClient });
     return c.json({ client: client.name });
 };

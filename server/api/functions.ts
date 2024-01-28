@@ -3,6 +3,8 @@ import { eq, and } from "drizzle-orm";
 
 import { db } from "../db/db";
 import { parkings, places } from "../db/schema";
+import { getUnknownMAC } from "../websocket/websocket";
+import { getStack } from "./carStack";
 
 let isOn = false;
 
@@ -85,6 +87,9 @@ export const getPlaceById = async (c: Context) => {
 
 export const getParkingsOfUser = async (c: Context) => {
     const user = c.get("user");
+    if (!user) {
+        return c.json({ error: "Unauthorized" }, 401);
+    }
     const listParkings = await db.select().from(parkings).where(eq(parkings.idAdmin, user.idClient));
     return c.json(listParkings);
 };
@@ -122,4 +127,20 @@ export const deleteParking = async (c: Context) => {
     await db.delete(places).where(eq(places.idParking, id));
     await db.delete(parkings).where(and(eq(parkings.idParking, id), eq(parkings.idAdmin, user.idClient)));
     return c.json({ msg: "Parking deleted" });
+};
+
+export const getAllParkings = async (c: Context) => {
+    const listParkings = await db.select().from(parkings);
+    return c.json(listParkings);
+};
+
+export const getMACs = async (c: Context) => {
+    const macs = getUnknownMAC();
+    return c.json(Object.keys(macs));
+};
+
+export const getCars = async (c: Context) => {
+    const parkingid = c.req.param("id");
+    const listCars = getStack(parkingid.toString());
+    return c.json(Object.keys(listCars));
 };

@@ -4,11 +4,11 @@ import { PLACES_STATES, JtoS, parseJSON } from "../../../shared/constants";
 type handler = (data: {}, isMessage?: boolean) => void;
 
 class SoftCaptor {
-    socket: WebSocket;
+    socket: WebSocket | null = null;
     currentState = PLACES_STATES.FREE;
     placeId;
     handlers: handler[] = [];
-    constructor(id: string) {
+    constructor(id: number) {
         this.placeId = id;
     }
     start() {
@@ -29,7 +29,7 @@ class SoftCaptor {
         if (!this.socket) {
             return;
         }
-        const dataToSend = { name: this.placeId, ...msg };
+        const dataToSend = { name: this.placeId.toString(), id: this.placeId, ...msg };
         this.handlers.forEach((oneHandler) => {
             oneHandler(dataToSend, true);
         });
@@ -45,7 +45,7 @@ class SoftCaptor {
         });
         let dataToSend: null | {} = null;
         if (data.request === "name") {
-            dataToSend = { request: "name", name: this.placeId };
+            dataToSend = { response: "name" };
         }
         if (dataToSend) {
             this.sendMessage(dataToSend);
@@ -53,6 +53,7 @@ class SoftCaptor {
     }
     destroy() {
         if (this.socket) {
+            console.log("destroying soft captor socket");
             this.socket.close();
         }
     }

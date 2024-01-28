@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { generateParking } from "../OneParking/parking";
+    import { generateParking } from "../../OneParking/parking";
     import { myFetch } from "../../utils";
     import { getParkingsOfUser } from "../Parkings/parkings";
 

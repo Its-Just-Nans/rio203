@@ -1,9 +1,10 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import OneParking from "../OneParking/OneParking.svelte";
+    import OneParking from "../../OneParking/OneParking.svelte";
     import { getParkingsOfUser } from "./parkings";
     import { parkings } from "../adminStore";
     import ParkingCreator from "../ParkingCreator/ParkingCreator.svelte";
+    import { getCars } from "../utils";
 
     onMount(() => {
         getParkingsOfUser();
@@ -22,6 +23,7 @@
             on:click={() => {
                 parkingCreation = false;
                 selectedParking = parking.idParking;
+                getCars(selectedParking.toString());
             }}
             class:selected={selectedParking === parking.idParking}
         >
@@ -42,8 +44,14 @@
 {:else}
     {#key selectedParking}
         {#if selectedParking !== null}
-            {selectedParking}
-            <OneParking bind:idParking={selectedParking} />
+            <OneParking
+                idParking={selectedParking}
+                isAdmin={true}
+                callBackDelete={() => {
+                    selectedParking = null;
+                    getParkingsOfUser();
+                }}
+            />
         {/if}
     {/key}
 {/if}

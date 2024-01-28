@@ -6,12 +6,15 @@ import { places } from "../db/schema";
 import { PLACES_STATES, parseJSON, JtoS } from "../../shared/constants";
 import { eq } from "drizzle-orm";
 import { getLatestClient } from "../api/carStack";
+import { sendUpdateToOwners, addToOwners } from "./owners";
+import { setWsClient } from "./websocketsClients";
 
 let wss;
 type WsClients = { [e: string]: WebSocket };
 
-let ws_clients: WsClients = {};
-let owners: WsClients = {};
+let unknownMAC: WsClients = {};
+
+export const getUnknownMAC = () => unknownMAC;
 
 export default (server: Server) => {
     wss = new WebSocketServer({ server });
@@ -28,13 +31,18 @@ const init = (wss: WebSocketServer) => {
     });
 };
 
-const onMessage = async (data: RawData, ws: WebSocket) => {
-    const { request, ...rest } = parseJSON(data.toString());
-    if (request === "name") {
-        ws_clients[rest.name] = ws;
-        ws.send(JtoS({ response: "name", ...rest }));
-        if (rest.isAdmin) {
-            owners[rest.name] = ws;
+const onMessage = async (stringData: RawData, ws: WebSocket) => {
+    const data = parseJSON(stringData.toString());
+    const { request, response, ...rest } = data;
+    if (request === "getId") {
+        // we retreive the id of the place
+        const { name } = rest;
+        const [onePlace] = await db.select().from(places).where(eq(places.name, name));
+        if (onePlace) {
+            ws.send(JtoS({ response: "getId", id: onePlace.idPlace }));
+        } else {
+            unknownMAC[name] = ws;
+            sendUpdateToOwners({ request: "reload", name: "macs" });
         }
     } else if (request === "car") {
         const { car: isCar, id } = rest.car;
@@ -44,18 +52,52 @@ const onMessage = async (data: RawData, ws: WebSocket) => {
         }
         const newState = isCar ? PLACES_STATES.BUSY : PLACES_STATES.FREE;
         await db.update(places).set({ state: newState }).where(eq(places.idPlace, id));
-        sendUpdateToOwners({ update: "car", car: isCar });
     } else if (request === "info") {
-        // handle change of state
+        const { name, state } = rest;
+        placeChangeState(name, state);
+    } else if (response === "name") {
+        // we receving a name
+        const { id, isAdmin, name } = rest;
+        if (isAdmin) {
+            addToOwners(name, ws);
+        }
+        if (id) {
+            setWsClient(id, ws);
+        } else {
+            // he don't have an id
+            const [captor] = await db.select().from(places).where(eq(places.name, name));
+            if (!captor) {
+                unknownMAC[rest.name] = ws;
+                sendUpdateToOwners({ request: "reload", name: "macs" });
+            }
+        }
     } else {
         console.log("unknown request", data.toString());
     }
-    sendUpdateToOwners({ request: "info", info: { request, ...rest } });
+    sendUpdateToOwners({ request: "info", info: data });
 };
 
-const sendUpdateToOwners = (msg: object) => {
-    console.log("sending update to owners");
-    for (const owner in owners) {
-        owners[owner].send(JtoS(msg));
+const placeChangeState = async (name: string, state: string) => {
+    const id = parseInt(name);
+    if (state == PLACES_STATES.BUSY) {
+        // someone is parking
+        const [onePlace] = await db.select().from(places).where(eq(places.idPlace, id));
+        let plaque = "";
+        if (onePlace) {
+            const latest = getLatestClient(onePlace.idParking.toString());
+            if (latest) {
+                plaque = latest.plaque;
+            }
+        }
+        await db
+            .update(places)
+            .set({ state: PLACES_STATES.BUSY, plaque: plaque, time: new Date().getTime() })
+            .where(eq(places.idPlace, id));
+    } else if (state == PLACES_STATES.FREE) {
+        // someone is leaving
+        await db.update(places).set({ state: PLACES_STATES.FREE }).where(eq(places.idPlace, id));
     }
+    console.log("Reload for owner");
+    sendUpdateToOwners({ request: "reload", name: "parking", idPlace: id });
+    sendUpdateToOwners({ request: "reload", name: "cars", idPlace: id });
 };

@@ -25,11 +25,7 @@
     });
     user.subscribe((value) => {
         if (value) {
-            if (value.isAdmin) {
-                navigate(PREFIX_URL + "admin", { replace: true });
-            } else {
-                navigate(PREFIX_URL + "account", { replace: true });
-            }
+            navigate(PREFIX_URL + "account", { replace: true });
         }
     });
 </script>
@@ -66,7 +62,7 @@
                 </details>
             </p>
         </div>
-        A project made for RIO203 - <Link to="about">Learn more</Link>
+        A project made for RIO203 -<a href="about.html">Learn more</a>
     </div>
 </div>
 

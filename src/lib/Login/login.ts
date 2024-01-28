@@ -18,6 +18,8 @@ export const checkLogin = () => {
     if (item) {
         const { username, password } = parseJSON(item);
         login(username, password);
+    } else {
+        user.set(null);
     }
 };
 
