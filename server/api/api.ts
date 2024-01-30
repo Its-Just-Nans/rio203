@@ -46,6 +46,6 @@ export default (app: Hono) => {
     });
     app.route("/api", api);
     app.notFound((c) => {
-        return c.text("Custom 404 Message", 404);
+        return c.redirect("/");
     });
 };
