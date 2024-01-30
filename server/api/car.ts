@@ -14,16 +14,16 @@ const getToPay = (timeIn: number) => {
 
 export const carDetected = async (c: Context) => {
     const { direction, plaque, parkingid: parkingId } = await c.req.json();
+    console.log({ direction, plaque, parkingId });
     if (direction === "out") {
         // we check the time of the place
-        const placeList = await db
+        const [place] = await db
             .select()
             .from(places)
             .where(and(eq(places.plaque, plaque), ne(places.time, 0)));
-        if (placeList.length === 0) {
+        if (!place) {
             return c.json(NO_PLACE_FOUND, 400);
         }
-        const place = placeList[0];
         const time = place.time;
         const date = new Date();
         const timeOut = date.getTime();
