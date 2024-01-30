@@ -7,7 +7,7 @@
     let result = "";
 </script>
 
-<div>
+<div class="wrap">
     <div>Simulator car detection</div>
     <input type="text" bind:value={plaque} placeholder="Enter license plate..." />
 
@@ -24,11 +24,17 @@
         }}>send fake</button
     >
     <br />
-    {result}
+    <div class="res">
+        {result}
+    </div>
 </div>
 
 <style>
-    div {
+    .wrap {
         border: 1px dotted black;
+    }
+    .res {
+        max-width: 300px;
+        overflow-wrap: anywhere;
     }
 </style>

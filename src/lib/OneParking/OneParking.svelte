@@ -9,6 +9,7 @@
     import Simulator from "./Simulator.svelte";
     import Placable from "../Placable/Placable.svelte";
     import { parkingReloader } from "./stores";
+    import { cars } from "../Admin/adminStore";
 
     export let idParking: number;
     export let isAdmin = false;
@@ -48,6 +49,12 @@
 
 <div class="parking">
     {#if isAdmin}
+        <details open>
+            <summary>Car moving: {$cars.length}</summary>
+            {#if $cars.length}
+                <span>{JSON.stringify($cars)}</span>
+            {/if}
+        </details>
         <button
             on:click={() => {
                 if (confirm("Are you sure ?")) {

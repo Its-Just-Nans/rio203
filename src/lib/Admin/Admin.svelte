@@ -37,11 +37,5 @@
             <span>{JSON.stringify($macs)}</span>
         {/if}
     </details>
-    <details open>
-        <summary>Car moving: {$cars.length}</summary>
-        {#if $cars.length}
-            <span>{JSON.stringify($cars)}</span>
-        {/if}
-    </details>
     <Parking />
 {/if}
