@@ -21,7 +21,7 @@ export const carDetected = async (c: Context) => {
             .from(places)
             .where(and(eq(places.plaque, plaque), ne(places.time, 0)));
         if (placeList.length === 0) {
-            return c.json(NO_PLACE_FOUND, 404);
+            return c.json(NO_PLACE_FOUND, 400);
         }
         const place = placeList[0];
         const time = place.time;
