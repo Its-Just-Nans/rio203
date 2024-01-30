@@ -30,7 +30,9 @@
 
 <Router basepath={PREFIX_URL}>
     <div class="header">
-        <h1>Welcome to {APP_NAME}</h1>
+        <a href={PREFIX_URL}>
+            <h1>{APP_NAME}</h1>
+        </a>
     </div>
     <div>
         <Route path={"/account"}>
@@ -44,6 +46,7 @@
                 <Redirect />
             {/if}
         </Route>
+        <Route path={"/login"}><Login /></Route>
         <Route path={"/"}><Home /></Route>
         <Route path="*">404</Route>
     </div>
@@ -54,5 +57,9 @@
         font-family: system-ui;
         display: flex;
         justify-content: center;
+    }
+    a {
+        text-decoration: none;
+        color: black;
     }
 </style>

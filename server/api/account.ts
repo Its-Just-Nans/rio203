@@ -3,7 +3,7 @@ import { eq, and, or } from "drizzle-orm";
 
 import { db } from "../db/db";
 import { clients, places } from "../db/schema";
-import { PLACES_STATES, generateToken } from "../../shared/constants";
+import { PLACES_STATES, PLACES_TYPES, generateToken } from "../../shared/constants";
 import { MISSING_PARAMS, USER_EXISTS, USER_NOT_FOUND } from "../../shared/errors";
 import { sendUpdateToOwners } from "../websocket/owners";
 import { sendObjectToClient } from "../websocket/websocketsClients";
@@ -123,7 +123,13 @@ export const reservePlace = async (c: Context) => {
     if (place.state !== PLACES_STATES.FREE) {
         return c.json({ error: "Place not free" }, 400);
     }
-    await db.update(places).set({ state: "RESERVED", plaque: user.plaque }).where(eq(places.idPlace, idPlace));
+    if (place.typePlace === PLACES_TYPES.ROAD) {
+        return c.json({ error: "Place is a road !" }, 400);
+    }
+    await db
+        .update(places)
+        .set({ state: PLACES_STATES.RESERVED, plaque: user.plaque })
+        .where(eq(places.idPlace, idPlace));
     sendObjectToClient(place.idPlace.toString(), { request: "setState", state: PLACES_STATES.RESERVED });
     sendUpdateToOwners({ request: "reload", name: "parking", idPlace: idPlace });
     return c.json({ succes: true }, 200);

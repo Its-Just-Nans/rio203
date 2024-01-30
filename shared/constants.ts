@@ -5,6 +5,13 @@ export const PLACES_STATES = {
     UNKNOWN: "unknown",
 };
 
+export const PLACES_TYPES = {
+    MOTORCYCLE: "motorcycle",
+    CAR: "car",
+    ELECTRIC: "electric",
+    ROAD: "road",
+};
+
 export const parseJSON = (jsonString: string) => {
     try {
         return JSON.parse(jsonString);

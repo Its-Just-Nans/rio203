@@ -15,6 +15,7 @@ export const places = sqliteTable("place", {
     plaque: text("plaque").notNull(),
     ip: text("ip").notNull(),
     idParking: integer("idParking").notNull(),
+    typePlace: text("typePlace").notNull(),
 });
 
 export const clients = sqliteTable("client", {

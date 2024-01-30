@@ -3,6 +3,10 @@
     import SoftCaptor from "./SoftCaptor";
     import { JtoS, PLACES_STATES } from "../../../shared/constants";
     import type { Place } from "../../../shared/types";
+    import { myFetch } from "../utils";
+    import { macs } from "../Admin/adminStore";
+    import { parkingReloader } from "../OneParking/stores";
+    import { getMacs } from "../Admin/utils";
 
     export let place: Place;
     const id = place.idPlace;
@@ -21,40 +25,69 @@
         };
     });
     let started = false;
+    let macSelected = "NULL";
 </script>
 
-<span>SOFTWARE Place ({id})</span>
+<span>Place "{id}" informations</span>
 <br />
 <div class="logger">
     <pre>{JSON.stringify(place, null, 4)}</pre>
 </div>
-
-{#if started}
-    <label for="isACar">Is a car ?</label>
-    <input
-        type="checkbox"
-        id="isACar"
-        bind:checked={isACar}
-        on:input={(event) => {
-            const { checked } = event.target;
-            soft.isCar(checked);
-        }}
-    />
-    <div class="logger">
-        {#each msgsToDisplay as [typeMsg, data]}
-            <span class="msg">
-                {typeMsg} - {JtoS(data)}
-            </span>
+{#if $macs.length > 0}
+    <select bind:value={macSelected}>
+        <option value="NULL">Select a MAC</option>
+        {#each $macs as mac}
+            <option value={mac}>
+                {mac}
+            </option>
         {/each}
-    </div>
-{:else}
-    <button
-        on:click={() => {
-            started = true;
-            soft.start();
-        }}>Start</button
-    >
+    </select>
+    {#if macSelected !== "NULL"}
+        <button
+            on:click={() => {
+                myFetch("/place/link", "POST", {
+                    idPlace: id,
+                    mac: macSelected,
+                }).then(() => {
+                    $parkingReloader = { idPlace: id };
+                    getMacs();
+                });
+            }}
+        >
+            Link the device to {macSelected}
+        </button>
+    {/if}
 {/if}
+<hr />
+<div>
+    <div>Sensor simulation</div>
+    {#if started}
+        <label for="isACar">Is a car ?</label>
+        <input
+            type="checkbox"
+            id="isACar"
+            bind:checked={isACar}
+            on:input={(event) => {
+                const { checked } = event.target;
+                soft.isCar(checked);
+            }}
+        />
+        <div class="logger">
+            {#each msgsToDisplay as [typeMsg, data]}
+                <span class="msg">
+                    {typeMsg} - {JtoS(data)}
+                </span>
+            {/each}
+        </div>
+    {:else}
+        <button
+            on:click={() => {
+                started = true;
+                soft.start();
+            }}>Start</button
+        >
+    {/if}
+</div>
 
 <style>
     .logger {

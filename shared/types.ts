@@ -11,6 +11,7 @@ export type Place = {
     state: string;
     time: number;
     ip: string;
+    typePlace: string;
 };
 
 export type Parking = {

@@ -8,7 +8,8 @@
 </script>
 
 <div>
-    <input type="text" bind:value={plaque} />
+    <div>Simulator car detection</div>
+    <input type="text" bind:value={plaque} placeholder="Enter license plate..." />
 
     <select bind:value={direction}>
         <option value="in">in</option>
@@ -18,11 +19,11 @@
     <button
         on:click={() => {
             myFetch("/carDetected", "POST", { parkingid: idParking, plaque, direction }).then((res) => {
-                console.log("res", res);
                 result = JSON.stringify(res);
             });
         }}>send fake</button
     >
+    <br />
     {result}
 </div>
 

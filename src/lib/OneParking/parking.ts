@@ -1,13 +1,17 @@
 import { get } from "svelte/store";
 import type { Place } from "../../../shared/types";
-import { PLACES_STATES } from "../../../shared/constants";
+import { PLACES_STATES, PLACES_TYPES } from "../../../shared/constants";
 import { myFetch } from "../utils";
 import { parkingReloader, places, editMode as editModeStore } from "./stores";
 
 const COLOR_MAP = {
     [PLACES_STATES.FREE]: "#00ff00",
     [PLACES_STATES.BUSY]: "#ff0000",
-    [PLACES_STATES.RESERVED]: "#0000ff",
+    [PLACES_STATES.RESERVED]: "#f38d21",
+    [PLACES_TYPES.CAR]: "#00e30a",
+    [PLACES_TYPES.MOTORCYCLE]: "#6ce39d",
+    [PLACES_TYPES.ELECTRIC]: "#0000ff",
+    [PLACES_TYPES.ROAD]: "#9d9d9d",
 };
 
 export const generateParking = () => {
@@ -23,13 +27,14 @@ export const generateParking = () => {
                 selected: false,
                 plaque: "",
                 ip: "",
-                name: `${x}-${y}`,
+                name: "",
                 state: PLACES_STATES.FREE,
                 time: 0,
                 a1: [a, b],
                 a2: [a + width, b],
                 a3: [a + width, b + height],
                 a4: [a, b + height],
+                typePlace: PLACES_TYPES.CAR,
             });
         }
         total += gridSize * 2;
@@ -53,11 +58,13 @@ export class Parking {
         this.editMode = editMode;
         parkingReloader.subscribe((val) => {
             const { idPlace } = val;
-            if (idPlace) {
+            if (typeof idPlace === "number") {
                 const isCorrectPlace = get(places).find((place) => place.idPlace === idPlace);
                 if (isCorrectPlace?.idParking) {
                     this.loadParking(isCorrectPlace.idParking.toString());
                 }
+            } else {
+                this.loadParking(this.parkingId);
             }
         });
         editModeStore.subscribe((newEditMode) => {
@@ -78,6 +85,14 @@ export class Parking {
             this.removeEvent();
             this.setUpEvent();
         }
+        // reset the place selection
+        places.update((currVal) => {
+            const newPlaces = currVal.map((onePlace) => {
+                onePlace.selected = false;
+                return onePlace;
+            });
+            return [...newPlaces];
+        });
         this.drawParking();
     };
 
@@ -172,14 +187,23 @@ export class Parking {
     drawParking = () => {
         const p = get(places);
         console.log("drawParking", p.length);
-        for (const onePlace of p) {
-            this.drawPlace(onePlace);
+        if (this.canvas && this.ctx) {
+            for (const onePlace of p) {
+                this.drawPlace(onePlace);
+            }
         }
     };
 
     drawPlace = (place: Place) => {
-        const { a1, a2, a3, a4, state, selected } = place;
-        this.ctx.fillStyle = COLOR_MAP[state] ?? "#ffa500";
+        const { a1, a2, a3, a4, state, selected, typePlace } = place;
+        if (state === PLACES_STATES.FREE) {
+            this.ctx.fillStyle = COLOR_MAP[typePlace] ?? "#00ff00";
+        } else if (state === PLACES_STATES.RESERVED) {
+            console.log("RESER");
+            this.ctx.fillStyle = COLOR_MAP[state];
+        } else {
+            this.ctx.fillStyle = COLOR_MAP[state] ?? "#ff0000";
+        }
         if (selected) {
             this.ctx.fillStyle = this.shadeColor(this.ctx.fillStyle, -50);
         }

@@ -8,13 +8,9 @@ import { eq } from "drizzle-orm";
 import { getLatestClient } from "../api/carStack";
 import { sendUpdateToOwners, addToOwners } from "./owners";
 import { setWsClient } from "./websocketsClients";
+import { setMac } from "../websocket/macs";
 
 let wss;
-type WsClients = { [e: string]: WebSocket };
-
-let unknownMAC: WsClients = {};
-
-export const getUnknownMAC = () => unknownMAC;
 
 export default (server: Server) => {
     wss = new WebSocketServer({ server });
@@ -41,7 +37,7 @@ const onMessage = async (stringData: RawData, ws: WebSocket) => {
         if (onePlace) {
             ws.send(JtoS({ response: "getId", id: onePlace.idPlace }));
         } else {
-            unknownMAC[name] = ws;
+            setMac(name, ws);
             sendUpdateToOwners({ request: "reload", name: "macs" });
         }
     } else if (request === "car") {
@@ -60,15 +56,16 @@ const onMessage = async (stringData: RawData, ws: WebSocket) => {
         const { id, isAdmin, name } = rest;
         if (isAdmin) {
             addToOwners(name, ws);
-        }
-        if (id) {
-            setWsClient(id, ws);
         } else {
-            // he don't have an id
-            const [captor] = await db.select().from(places).where(eq(places.name, name));
-            if (!captor) {
-                unknownMAC[rest.name] = ws;
-                sendUpdateToOwners({ request: "reload", name: "macs" });
+            if (typeof id === "number") {
+                setWsClient(id.toString(), ws);
+            } else {
+                // he don't have an id
+                const [captor] = await db.select().from(places).where(eq(places.name, name));
+                if (!captor) {
+                    setMac(name, ws);
+                    sendUpdateToOwners({ request: "reload", name: "macs" });
+                }
             }
         }
     } else {

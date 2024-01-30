@@ -3,8 +3,9 @@ import { eq, and } from "drizzle-orm";
 
 import { db } from "../db/db";
 import { parkings, places } from "../db/schema";
-import { getUnknownMAC } from "../websocket/websocket";
+import { getUnknownMAC } from "../websocket/macs";
 import { getStack } from "./carStack";
+import { removeMac } from "../websocket/macs";
 
 let isOn = false;
 
@@ -45,7 +46,9 @@ export const setPlaces = async (c: Context) => {
         .returning();
     const placesAdded = await db
         .insert(places)
-        .values(bodyPlaces.map((onePlace) => ({ ...onePlace, idParking: createdParking[0].idParking })))
+        .values(
+            bodyPlaces.map((onePlace) => ({ ...onePlace, idParking: createdParking[0].idParking, typePlace: "car" }))
+        )
         .returning();
     let maxWidth = 0;
     let maxHeight = 0;
@@ -142,5 +145,35 @@ export const getMACs = async (c: Context) => {
 export const getCars = async (c: Context) => {
     const parkingid = c.req.param("id");
     const listCars = getStack(parkingid.toString());
-    return c.json(Object.keys(listCars));
+    return c.json(listCars);
+};
+
+export const setTypePlace = async (c: Context) => {
+    const id = parseInt(c.req.param("id"));
+    if (!id) {
+        return c.json({ error: "Invalid ID" }, 400);
+    }
+    const { typePlace } = await c.req.json();
+    await db.update(places).set({ typePlace }).where(eq(places.idPlace, id));
+    return c.json({ msg: "typePlace updated" });
+};
+
+export const setState = async (c: Context) => {
+    const id = parseInt(c.req.param("id"));
+    if (!id) {
+        return c.json({ error: "Invalid ID" }, 400);
+    }
+    const { state } = await c.req.json();
+    await db.update(places).set({ state }).where(eq(places.idPlace, id));
+    return c.json({ msg: "state updated" });
+};
+
+export const linkPlace = async (c: Context) => {
+    const { idPlace, mac } = await c.req.json();
+    if (!idPlace || !mac) {
+        return c.json({ error: "Invalid body" }, 400);
+    }
+    await db.update(places).set({ name: mac }).where(eq(places.idPlace, idPlace));
+    removeMac(mac, idPlace.toString());
+    return c.json({ msg: "place linked" });
 };
