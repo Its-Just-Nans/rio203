@@ -1,13 +1,14 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { getCars, getMacs } from "../utils";
+    import { getCarsIn, getCarsOut, getMacs } from "../utils";
     import { loadSocket, closeSocket, msgs } from "./realTimeConsole";
 
     onMount(() => {
         loadSocket();
 
         getMacs();
-        getCars();
+        getCarsIn();
+        getCarsOut();
         return () => {
             console.log("admin socket unmounted");
             closeSocket();

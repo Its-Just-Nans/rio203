@@ -5,7 +5,7 @@ import { db } from "../db/db";
 import { places } from "../db/schema";
 import { PLACES_STATES, parseJSON, JtoS } from "../../shared/constants";
 import { eq } from "drizzle-orm";
-import { getLatestClient } from "../api/carStack";
+import { addToStackOut, getLatestClientIn } from "../api/carStack";
 import { sendUpdateToOwners, addToOwners } from "./owners";
 import { setWsClient } from "./websocketsClients";
 import { setMac } from "../websocket/macs";
@@ -81,7 +81,7 @@ const placeChangeState = async (name: string, state: string) => {
         const [onePlace] = await db.select().from(places).where(eq(places.idPlace, id));
         let plaque = "";
         if (onePlace) {
-            const latest = getLatestClient(onePlace.idParking.toString());
+            const latest = getLatestClientIn(onePlace.idParking.toString());
             if (latest) {
                 plaque = latest.plaque;
             }
@@ -92,7 +92,14 @@ const placeChangeState = async (name: string, state: string) => {
             .where(eq(places.idPlace, id));
     } else if (state == PLACES_STATES.FREE) {
         // someone is leaving
-        await db.update(places).set({ state: PLACES_STATES.FREE }).where(eq(places.idPlace, id));
+        const [place] = await db.select().from(places).where(eq(places.idPlace, id));
+        if (place) {
+            await db
+                .update(places)
+                .set({ state: PLACES_STATES.FREE, plaque: "", time: 0 })
+                .where(eq(places.idPlace, id));
+            addToStackOut(place.idParking.toString(), { plaque: place.plaque, time: place.time, idPlace: id });
+        }
     }
     console.log("Reload for owner");
     sendUpdateToOwners({ request: "reload", name: "parking", idPlace: id });

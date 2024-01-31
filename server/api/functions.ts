@@ -3,9 +3,8 @@ import { eq, and } from "drizzle-orm";
 
 import { db } from "../db/db";
 import { parkings, places } from "../db/schema";
-import { getUnknownMAC } from "../websocket/macs";
-import { getStack } from "./carStack";
-import { removeMac } from "../websocket/macs";
+import { getUnknownMAC, removeMac } from "../websocket/macs";
+import { getStackOut, getStackIn } from "./carStack";
 
 let isOn = false;
 
@@ -142,9 +141,14 @@ export const getMACs = async (c: Context) => {
     return c.json(Object.keys(macs));
 };
 
-export const getCars = async (c: Context) => {
+export const getCarsOut = async (c: Context) => {
     const parkingid = c.req.param("id");
-    const listCars = getStack(parkingid.toString());
+    const listCars = getStackOut(parkingid.toString());
+    return c.json(listCars);
+};
+export const getCarsIn = async (c: Context) => {
+    const parkingid = c.req.param("id");
+    const listCars = getStackIn(parkingid.toString());
     return c.json(listCars);
 };
 

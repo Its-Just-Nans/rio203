@@ -9,7 +9,7 @@
     import Simulator from "./Simulator.svelte";
     import Placable from "../Placable/Placable.svelte";
     import { parkingReloader } from "./stores";
-    import { cars } from "../Admin/adminStore";
+    import { carsIn, carsOut } from "../Admin/adminStore";
 
     export let idParking: number;
     export let isAdmin = false;
@@ -50,9 +50,15 @@
 <div class="parking">
     {#if isAdmin}
         <details open>
-            <summary>Car moving: {$cars.length}</summary>
-            {#if $cars.length}
-                <span>{JSON.stringify($cars)}</span>
+            <summary>Car moving in: {$carsIn.length}</summary>
+            {#if $carsIn.length}
+                <span>{JSON.stringify($carsIn)}</span>
+            {/if}
+        </details>
+        <details open>
+            <summary>Car moving out: {$carsOut.length}</summary>
+            {#if $carsOut.length}
+                <span>{JSON.stringify($carsOut)}</span>
             {/if}
         </details>
         <button

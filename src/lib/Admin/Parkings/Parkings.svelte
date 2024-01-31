@@ -4,7 +4,7 @@
     import { getParkingsOfUser } from "./parkings";
     import { parkings } from "../adminStore";
     import ParkingCreator from "../ParkingCreator/ParkingCreator.svelte";
-    import { getCars } from "../utils";
+    import { getCarsIn, getCarsOut } from "../utils";
 
     onMount(() => {
         getParkingsOfUser();
@@ -23,7 +23,8 @@
             on:click={() => {
                 parkingCreation = false;
                 selectedParking = parking.idParking;
-                getCars(selectedParking.toString());
+                getCarsIn(selectedParking.toString());
+                getCarsOut(selectedParking.toString());
             }}
             class:selected={selectedParking === parking.idParking}
         >

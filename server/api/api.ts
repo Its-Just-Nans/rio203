@@ -10,7 +10,8 @@ import {
     deleteParking,
     getAllParkings,
     getMACs,
-    getCars,
+    getCarsIn,
+    getCarsOut,
     setTypePlace,
     setState,
     linkPlace,
@@ -40,7 +41,8 @@ export default (app: Hono) => {
     api.patch("/place/:id/typePlace", setTypePlace);
     api.patch("/place/:id/state", setState);
     api.post("/carDetected", carDetected);
-    api.get("/cars/:id", getCars);
+    api.get("/carsIn/:id", getCarsIn);
+    api.get("/carsOut/:id", getCarsOut);
     api.get("/macs", getMACs);
     api.post("/reservePlace", reservePlace);
     api.post("/login", login);

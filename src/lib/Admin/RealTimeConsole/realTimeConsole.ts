@@ -2,7 +2,7 @@ import { webSocketURL } from "../../utils";
 import { user } from "../../stores";
 import { parseJSON, JtoS } from "../../../../shared/constants";
 import { writable, get } from "svelte/store";
-import { getCars, getMacs } from "../utils";
+import { getCarsIn, getCarsOut, getMacs } from "../utils";
 import { parkingReloader } from "../../OneParking/stores";
 
 let socket: null | WebSocket = null;
@@ -36,7 +36,8 @@ const handlerMsg = (event) => {
             getMacs();
         } else if (name === "cars") {
             // reload cars list
-            getCars();
+            getCarsIn();
+            getCarsOut();
         }
     }
 };

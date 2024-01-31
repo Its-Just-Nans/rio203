@@ -1,6 +1,6 @@
 let stack: { [s: string]: any[] } = {};
 
-export const getLatestClient = (parkingId: string) => {
+export const getLatestClientIn = (parkingId: string) => {
     if (!stack[parkingId]) {
         stack[parkingId] = [];
     }
@@ -9,16 +9,45 @@ export const getLatestClient = (parkingId: string) => {
     return latest;
 };
 
-export const addToStack = (parkingId: string, data: any) => {
+export const addToStackIn = (parkingId: string, data: any) => {
     if (!stack[parkingId]) {
         stack[parkingId] = [];
     }
     stack[parkingId].push(data);
 };
 
-export const getStack = (parkingId: string) => {
+export const getStackIn = (parkingId: string) => {
     if (!stack[parkingId]) {
         stack[parkingId] = [];
     }
     return stack[parkingId];
+};
+
+let stackOut: { [s: string]: any[] } = {};
+
+export const getLatestClientOut = (parkingId: string, plaque: string) => {
+    if (!stackOut[parkingId]) {
+        stackOut[parkingId] = [];
+    }
+    const latest = stackOut[parkingId].find((e) => e.plaque === plaque);
+    if (latest) {
+        const index = stackOut[parkingId].indexOf(latest);
+        stackOut[parkingId].splice(index, 1);
+        return latest;
+    }
+    return {};
+};
+
+export const addToStackOut = (parkingId: string, data: any) => {
+    if (!stackOut[parkingId]) {
+        stackOut[parkingId] = [];
+    }
+    stackOut[parkingId].push(data);
+};
+
+export const getStackOut = (parkingId: string) => {
+    if (!stackOut[parkingId]) {
+        stackOut[parkingId] = [];
+    }
+    return stackOut[parkingId];
 };

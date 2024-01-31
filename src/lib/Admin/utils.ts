@@ -1,5 +1,5 @@
 import { myFetch } from "../utils";
-import { cars, macs } from "./adminStore";
+import { carsIn, carsOut, macs } from "./adminStore";
 
 export const getMacs = async () => {
     myFetch("/macs").then((data) => {
@@ -9,7 +9,7 @@ export const getMacs = async () => {
 
 let parkingIdSave = "";
 
-export const getCars = async (parkingId?: string) => {
+export const getCarsIn = async (parkingId?: string) => {
     if (parkingId) {
         parkingIdSave = parkingId;
     } else {
@@ -18,7 +18,20 @@ export const getCars = async (parkingId?: string) => {
     if (!parkingId) {
         return;
     }
-    myFetch("/cars/" + parkingId).then((data) => {
-        cars.set(data);
+    myFetch("/carsIn/" + parkingId).then((data) => {
+        carsIn.set(data);
+    });
+};
+export const getCarsOut = async (parkingId?: string) => {
+    if (parkingId) {
+        parkingIdSave = parkingId;
+    } else {
+        parkingId = parkingIdSave;
+    }
+    if (!parkingId) {
+        return;
+    }
+    myFetch("/carsOut/" + parkingId).then((data) => {
+        carsOut.set(data);
     });
 };

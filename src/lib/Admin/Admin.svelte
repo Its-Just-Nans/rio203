@@ -1,15 +1,10 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import { parseJSON, JtoS } from "../../../shared/constants";
     import Parking from "./Parkings/Parkings.svelte";
     import Placable from "../Placable/Placable.svelte";
     import { user, PREFIX_URL } from "../stores";
-    import { webSocketURL } from "../utils";
     import { logout } from "../Login/login";
     import { navigate } from "svelte-routing";
-    import { getCars, getMacs } from "./utils";
-    import { parkingReloader } from "../OneParking/stores";
-    import { macs, cars } from "./adminStore";
+    import { macs } from "./adminStore";
     import RealTimeConsole from "./RealTimeConsole/RealTimeConsole.svelte";
 
     let msgs: {}[] = [];
