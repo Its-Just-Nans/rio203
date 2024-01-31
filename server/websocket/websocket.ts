@@ -49,8 +49,10 @@ const onMessage = async (stringData: RawData, ws: WebSocket) => {
         const newState = isCar ? PLACES_STATES.BUSY : PLACES_STATES.FREE;
         await db.update(places).set({ state: newState }).where(eq(places.idPlace, id));
     } else if (request === "info") {
-        const { name, state } = rest;
-        placeChangeState(name, state);
+        const { state, id } = rest;
+        if (typeof id === "number") {
+            placeChangeState(id, state);
+        }
     } else if (response === "name") {
         // we receving a name
         const { id, isAdmin, name } = rest;
@@ -74,8 +76,7 @@ const onMessage = async (stringData: RawData, ws: WebSocket) => {
     sendUpdateToOwners({ request: "info", info: data });
 };
 
-const placeChangeState = async (name: string, state: string) => {
-    const id = parseInt(name);
+const placeChangeState = async (id: number, state: string) => {
     if (state == PLACES_STATES.BUSY) {
         // someone is parking
         const [onePlace] = await db.select().from(places).where(eq(places.idPlace, id));
