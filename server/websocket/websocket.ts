@@ -36,6 +36,7 @@ const onMessage = async (stringData: RawData, ws: WebSocket) => {
         const [onePlace] = await db.select().from(places).where(eq(places.name, name));
         if (onePlace) {
             ws.send(JtoS({ response: "getId", id: onePlace.idPlace }));
+            setWsClient(onePlace.idPlace.toString(), ws);
         } else {
             setMac(name, ws);
             sendUpdateToOwners({ request: "reload", name: "macs" });
