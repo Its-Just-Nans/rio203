@@ -94,11 +94,8 @@ const placeChangeState = async (id: number, state: string) => {
     } else if (state == PLACES_STATES.FREE) {
         // someone is leaving
         const [place] = await db.select().from(places).where(eq(places.idPlace, id));
+        await db.update(places).set({ state: PLACES_STATES.FREE, plaque: "", time: 0 }).where(eq(places.idPlace, id));
         if (place.plaque !== "") {
-            await db
-                .update(places)
-                .set({ state: PLACES_STATES.FREE, plaque: "", time: 0 })
-                .where(eq(places.idPlace, id));
             addToStackOut(place.idParking.toString(), { plaque: place.plaque, time: place.time, idPlace: id });
         }
     }
