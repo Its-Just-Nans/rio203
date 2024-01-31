@@ -5,10 +5,11 @@
     import { getParkings, parkingList } from "../account";
     import { myFetch } from "../utils";
     import OneParking from "../OneParking/OneParking.svelte";
-    import { parkingReloader } from "../OneParking/stores";
+    import { parkingReloader, editMode } from "../OneParking/stores";
 
     onMount(() => {
         getParkings();
+        $editMode = false;
     });
     let amount = 0;
     let parkingSelected = "NULL";
