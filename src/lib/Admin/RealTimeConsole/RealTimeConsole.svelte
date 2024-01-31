@@ -17,7 +17,11 @@
 </script>
 
 <div>
-    <span>Real-time console</span>
+    <span>Real-time console</span><button
+        on:click={() => {
+            $msgs = [];
+        }}>Clear console</button
+    >
     <div id="logger-admin">
         {#each $msgs as oneMsg}
             <span class="msg">{JSON.stringify(oneMsg)}</span>
