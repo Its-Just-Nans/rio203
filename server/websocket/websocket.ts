@@ -93,7 +93,7 @@ const placeChangeState = async (name: string, state: string) => {
     } else if (state == PLACES_STATES.FREE) {
         // someone is leaving
         const [place] = await db.select().from(places).where(eq(places.idPlace, id));
-        if (place) {
+        if (place.plaque !== "") {
             await db
                 .update(places)
                 .set({ state: PLACES_STATES.FREE, plaque: "", time: 0 })
