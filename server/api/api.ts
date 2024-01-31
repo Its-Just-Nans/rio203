@@ -15,6 +15,7 @@ import {
     setTypePlace,
     setState,
     linkPlace,
+    factoryReset,
 } from "./functions";
 import { carDetected } from "./car";
 import { login, logout, register, parseUser, addBalance, reservePlace } from "./account";
@@ -37,6 +38,7 @@ export default (app: Hono) => {
     api.get("/places/:id", getPlacesOfParking);
     api.post("/places", setPlaces);
     api.get("/place/:id", getPlaceById);
+    api.post("/place/:id/factoryReset", factoryReset);
     api.post("/place/link", linkPlace);
     api.patch("/place/:id/typePlace", setTypePlace);
     api.patch("/place/:id/state", setState);

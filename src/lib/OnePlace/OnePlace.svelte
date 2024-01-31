@@ -61,6 +61,17 @@
 <hr />
 <div>
     <div>Sensor simulation</div>
+    <div>
+        <button
+            on:click={() => {
+                myFetch(`/place/${id?.toString()}/factoryReset`, "POST", {
+                    idPlace: id,
+                }).then(() => {
+                    $parkingReloader = { idPlace: id };
+                });
+            }}>Factory Reset</button
+        >
+    </div>
     {#if started}
         <label for="isACar">Is a car ?</label>
         <input

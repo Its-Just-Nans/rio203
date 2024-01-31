@@ -35,7 +35,7 @@ export const getLatestClientOut = (parkingId: string, plaque: string) => {
         stackOut[parkingId].splice(index, 1);
         return latest;
     }
-    return {};
+    return null;
 };
 
 export const addToStackOut = (parkingId: string, data: any) => {

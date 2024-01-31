@@ -5,6 +5,7 @@ import { db } from "../db/db";
 import { parkings, places } from "../db/schema";
 import { getUnknownMAC, removeMac } from "../websocket/macs";
 import { getStackOut, getStackIn } from "./carStack";
+import { PLACES_STATES, PLACES_TYPES } from "../../shared/constants";
 
 let isOn = false;
 
@@ -178,6 +179,18 @@ export const linkPlace = async (c: Context) => {
         return c.json({ error: "Invalid body" }, 400);
     }
     await db.update(places).set({ name: mac }).where(eq(places.idPlace, idPlace));
-    removeMac(mac, idPlace.toString());
+    removeMac(mac, idPlace);
+    return c.json({ msg: "place linked" });
+};
+
+export const factoryReset = async (c: Context) => {
+    const { idPlace } = await c.req.json();
+    if (!idPlace) {
+        return c.json({ error: "Invalid body" }, 400);
+    }
+    await db
+        .update(places)
+        .set({ name: "", state: PLACES_STATES.FREE, typePlace: PLACES_TYPES.CAR, time: 0, ip: "" })
+        .where(eq(places.idPlace, idPlace));
     return c.json({ msg: "place linked" });
 };
