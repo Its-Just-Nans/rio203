@@ -66,7 +66,7 @@
             </p>
         </div>
         <span>A project made for RIO203 - </span>
-        <a href="about.html">Learn more</a>
+        <a href="about">Learn more</a>
     </div>
 </div>
 
