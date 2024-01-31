@@ -9,6 +9,7 @@ This repo is linked to:
 - <https://github.com/katheleligaf/rio203-sensors> - Sensors (ESP32, Rasperry Pico W)
 - <https://github.com/comeyrd/rio203-diagrams> - Diagrams for the final report
 - <https://github.com/Its-Just-Nans/rio203-report> - Final report
+- <https://tinyurl.com/rio203> - Short link to this repo
 
 <details>
 
